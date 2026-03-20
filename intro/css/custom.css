@@ -1,0 +1,192 @@
+/*
+ * Custom theme for Bitcoin & Quantum Computing slide deck.
+ * Extends Reveal.js "night" base theme.
+ */
+
+/* ── Palette ──────────────────────────────────────────────── */
+:root {
+  --q-purple:  #7c3aed;
+  --q-blue:    #2563eb;
+  --q-cyan:    #06b6d4;
+  --btc-orange:#f7931a;
+  --danger:    #ef4444;
+  --warning:   #f59e0b;
+  --safe:      #10b981;
+  --muted:     #94a3b8;
+  --dimmed:    #64748b;
+}
+
+/* ── Base typography ──────────────────────────────────────── */
+.reveal {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+.reveal h1,
+.reveal h2 {
+  text-transform: none;
+  color: #e2e8f0;
+}
+
+.reveal h1 { font-size: 2.2em; }
+
+.reveal h2 {
+  font-size: 1.6em;
+  border-bottom: 2px solid var(--q-purple);
+  padding-bottom: 0.2em;
+}
+
+.reveal h3 {
+  font-size: 1.15em;
+  color: var(--q-cyan);
+  text-transform: none;
+}
+
+/* ── Layout helpers ───────────────────────────────────────── */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1em;
+  text-align: left;
+}
+
+.three-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.8em;
+  text-align: left;
+}
+
+/* ── Card / accent boxes ──────────────────────────────────── */
+.col-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: 1em;
+}
+
+.key-point {
+  background: rgba(124, 58, 237, 0.15);
+  border-left: 4px solid var(--q-purple);
+  padding: 0.7em 1em;
+  margin: 0.45em 0;
+  border-radius: 0 8px 8px 0;
+  text-align: left;
+}
+
+/* ── Stage colour badges ──────────────────────────────────── */
+.stage-badge {
+  display: inline-block;
+  padding: 0.3em 0.9em;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 0.8em;
+  white-space: nowrap;
+}
+
+.stage-0 { background: #4c1d95; }
+.stage-1 { background: #1e3a8a; }
+.stage-2 { background: #065f46; }
+.stage-3 { background: #78350f; }
+.stage-4 { background: #7f1d1d; }
+
+/* ── Scenario card borders ────────────────────────────────── */
+.scenario-pessimistic { border-color: var(--danger)  !important; }
+.scenario-balanced    { border-color: var(--warning) !important; }
+.scenario-optimistic  { border-color: var(--safe)    !important; }
+
+/* ── Utility colour classes ───────────────────────────────── */
+.btc   { color: var(--btc-orange); font-weight: bold; }
+.good  { color: var(--safe);    }
+.bad   { color: var(--danger);  }
+.warn  { color: var(--warning); }
+.muted { color: var(--muted);   }
+.dim   { color: var(--dimmed);  }
+
+/* ── Tables ───────────────────────────────────────────────── */
+.reveal table.styled {
+  width: 100%;
+  font-size: 0.7em;
+  border-collapse: collapse;
+}
+
+.reveal table.styled th {
+  background: rgba(124, 58, 237, 0.3);
+  padding: 0.5em 0.7em;
+  text-align: center;
+}
+
+.reveal table.styled td {
+  padding: 0.4em 0.6em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+}
+
+.reveal table.styled tr:hover td {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* ── Monospace / terminal blocks ─────────────────────────── */
+.terminal {
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  padding: 1em 1.2em;
+  font-family: 'Courier New', 'Consolas', monospace;
+  font-size: 0.65em;
+  text-align: left;
+  color: #c8f5a0;
+  line-height: 1.5;
+}
+
+/* ── Timeline component ───────────────────────────────────── */
+.timeline {
+  position: relative;
+  padding-left: 2em;
+  text-align: left;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0.5em;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--q-purple), var(--q-cyan));
+}
+
+.timeline-item {
+  position: relative;
+  margin: 0.55em 0;
+  font-size: 0.75em;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -1.55em;
+  top: 0.3em;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--q-cyan);
+}
+
+.timeline-year {
+  color: var(--q-cyan);
+  font-weight: bold;
+}
+
+/* ── Pin header to top on all non-title slides ───────────── */
+/* Reveal.js sets inline top:Xpx for vertical centering;
+   !important is required to override that inline style.     */
+.reveal .slides section:not(:first-child) {
+  top: 0 !important;
+}
+
+/* ── Source / caption text ───────────────────────────────── */
+.source {
+  font-size: 0.55em;
+  color: var(--dimmed);
+  margin-top: 0.8em;
+}

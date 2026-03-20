@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Bitcoin &amp; Quantum Computing</title>
+
+  <!-- Reveal.js core (local) -->
+  <link rel="stylesheet" href="node_modules/reveal.js/dist/reset.css">
+  <link rel="stylesheet" href="node_modules/reveal.js/dist/reveal.css">
+  <!-- Base theme -->
+  <link rel="stylesheet" href="node_modules/reveal.js/dist/theme/night.css">
+  <!-- Project custom styles -->
+  <link rel="stylesheet" href="css/custom.css">
+</head>
+
+<body>
+<div class="reveal">
+<div class="slides">
+
+  <!-- ═══════════════════════════════════════════════════════════
+       TITLE
+  ═══════════════════════════════════════════════════════════ -->
+  <section data-background="linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)">
+    <div style="padding: 2em 0 6em 0;">
+      <h1 style="font-size: 1.7em; color: #f7931a; margin-bottom: 0.2em;">BIP-360: Intro and Update</h1>
+      <hr style="border: none; border-top: 2px solid #7c3aed; width: 55%; margin: 1em auto;">
+    </div>
+    <!-- Bottom-left attribution -->
+    <div style="position: absolute; bottom: 1em; left: 1.2em; text-align: left; line-height: 1.4;">
+      <p style="margin: 0; font-size: 0.55em; color: #e2e8f0; font-weight: 600;">Jeff Bride</p>
+      <p style="margin: 0; font-size: 0.5em; color: #94a3b8;">Marathon Digital (MARA)</p>
+      <p style="margin: 0; font-size: 0.5em; color: #94a3b8;">March 2026</p>
+    </div>
+  </section>
+
+  <section>
+    <!--
+      Annotation overlay technique:
+        • Outer div is position:relative so the SVG can be placed
+          absolutely on top of the image.
+        • SVG viewBox matches the image's natural pixel dimensions (908×914)
+          so x/y coordinates map 1-to-1 with pixels in the source image.
+        • overflow:visible on the SVG lets the arrow and label render
+          to the right of the image boundary without clipping.
+    -->
+    <div style="position: relative; display: inline-block;">
+
+      <img src="images/btc_supply_vs_crqc.png"
+           alt="Pie chart: Bitcoin supply breakdown by quantum vulnerability"
+           style="max-height: 600px; width: auto; display: block;
+                  border-radius: 8px; box-shadow: 0 4px 24px rgba(0,0,0,0.5);">
+
+      <!-- SVG annotation layer — natural image coords: 908 × 914 px -->
+      <svg viewBox="0 0 908 914"
+           preserveAspectRatio="xMinYMin meet"
+           style="position: absolute; top: 0; left: 0;
+                  width: 100%; height: 100%; overflow: visible;">
+        <defs>
+          <marker id="arrow-blue" markerWidth="9" markerHeight="9"
+                  refX="8" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L9,3 Z" fill="#3b82f6"/>
+          </marker>
+          <marker id="arrow-red" markerWidth="9" markerHeight="9"
+                  refX="8" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L9,3 Z" fill="#ef4444"/>
+          </marker>
+        </defs>
+
+        <!-- Fragment group: hidden until next click/keypress -->
+        <g class="fragment">
+
+          <!--
+            Arrow: originates outside the image to the right (x=1080)
+            and points to the P2TR legend row (3rd legend item, y≈200).
+            Slight downward angle gives a natural callout feel.
+          -->
+          <line x1="1080" y1="182"
+                x2="850"  y2="220"
+                stroke="#3b82f6" stroke-width="3"
+                marker-end="url(#arrow-blue)"/>
+
+          <!-- Label pill background -->
+          <rect x="1087" y="158" width="118" height="34"
+                rx="6" ry="6"
+                fill="rgba(0,0,0,0.72)" stroke="#3b82f6" stroke-width="1.5"/>
+
+          <!-- Label text -->
+          <text x="1146" y="181"
+                fill="#3b82f6" font-size="20" font-weight="bold"
+                font-family="'Segoe UI', system-ui, sans-serif"
+                text-anchor="middle">BIP-360</text>
+
+        </g><!-- /.fragment: BIP-360 -->
+
+        <!-- Fragment 2: Hourglass v2 — appears on second click -->
+        <g class="fragment">
+
+          <!--
+            Arrow: originates outside the image to the right (x=1080)
+            and points to the P2PK legend row (4th legend item, y≈255).
+          -->
+          <line x1="1080" y1="272"
+                x2="810"  y2="258"
+                stroke="#ef4444" stroke-width="3"
+                marker-end="url(#arrow-red)"/>
+
+          <!-- Label pill background -->
+          <rect x="1087" y="249" width="152" height="34"
+                rx="6" ry="6"
+                fill="rgba(0,0,0,0.72)" stroke="#ef4444" stroke-width="1.5"/>
+
+          <!-- Label text -->
+          <text x="1163" y="272"
+                fill="#ef4444" font-size="20" font-weight="bold"
+                font-family="'Segoe UI', system-ui, sans-serif"
+                text-anchor="middle">Hourglass v2</text>
+
+        </g><!-- /.fragment: Hourglass v2 -->
+
+      </svg>
+    </div>
+
+    <p class="source">
+      Source: Unchained &amp; ARK Investment Management LLC, 2026 — based on data from Project Eleven 2026
+    </p>
+  </section>
+
+  <section>
+    <div style="display:flex; justify-content:center; align-items:center;">
+      <img src="images/q-day.png"
+             alt="Q-Day Apocalypse"
+             style="max-height: 400px; width: auto; display: block;
+                    border-radius: 8px; box-shadow: 0 4px 24px rgba(0,0,0,0.5);">
+    </div>
+    <div class="fragment" style="
+      position:absolute; top:110%; left:0; right:0;
+      text-align:center; font-size:0.5em; color:#94a3b8; padding:0.4em 1em;">
+      <div style="color:#60a5fa;">For the battle-tested HODLERs, read:</div>
+      <div style="color:#ffffff; padding-left:2em;">https://www.ark-invest.com/Thank-You/bitcoin-and-quantum-computing</div>
+    </div>
+    <aside class="notes">
+      ARK Invest and Unchained published a joint white paper laying out the most rigorous public accounting to date of Bitcoin's exposure to quantum computing.
+      Authored by Dhruv Bansal and Tom Honzik of Unchained and David Puell of ARK, the paper finds that 65.4% of the bitcoin supply is not vulnerable to a quantum breakthrough under current conditions, while 34.6% remains at risk if quantum computers advance far enough to break elliptic curve cryptography.
+      That exposed pool breaks down to roughly 5 million BTC in reused addresses, 1.7 million BTC presumed lost in legacy P2PK outputs, and 200,000 BTC in P2TR addresses. To actually breach Bitcoin's ECC, the authors estimate a machine would need approximately "2,330 logical qubits and tens of millions to billions of quantum gates," a threshold they say "will take a very long time" to reach.
+      The paper structures quantum development into five stages, with meaningful risk to bitcoin holders beginning only at Stage 3 and an existential protocol threat arriving only at Stage 4.
+      The mid-2030s is cited as the consensus window for the first public key break, in line with projections from Google, IBM, and Microsoft.
+      The paper calls for proactive integration of post-quantum cryptography standards, specifically ML-DSA and SLH-DSA, via soft fork, while flagging Bitcoin's decentralized governance as the primary implementation challenge.
+    </aside>
+  </section>
+
+  <section>
+    <h2>PQC Mandates</h2>
+    <div class="timeline" style="margin-top: 0.8em; font-size: 0.78em;">
+
+      <div class="timeline-item">
+        <span class="timeline-year">2028</span> —
+        <strong>NSA CNSA 2.0</strong>: National Security Systems must support PQC algorithms
+        for all new firmware and software acquisitions
+      </div>
+
+      <div class="timeline-item">
+        <span class="timeline-year">2030</span> —
+        <strong>NSA CNSA 2.0</strong>: PQC required for NSS software &amp; networking equipment
+        <span class="muted">— gear where PQC is delivered via firmware/software update (routers, firewalls, VPN)</span>
+      </div>
+
+      <div class="timeline-item">
+        <span class="timeline-year">2033</span> —
+        <strong>NSA CNSA 2.0</strong>: NSS cryptographic hardware fully transitioned
+        <span class="muted">— devices where crypto lives in silicon: Type 1 encryptors, HSMs, certified ASICs;
+        requires physical replacement + NSA recertification, not a firmware update</span>
+      </div>
+
+      <div class="timeline-item">
+        <span class="timeline-year">2035</span> —
+        <strong class="bad">NIST IR 8547</strong>: hard deprecation deadline for RSA, DSA, ECDSA, ECDH —
+        the outer bound of the Bitcoin migration window
+      </div>
+
+    </div>
+    <aside class="notes">
+      <ul>
+        <li>2027 is the practical "get started now" signal from NIST for federal agencies — planning must be done, active migration underway</li>
+        <li>CNSA 2.0 has two distinct deadlines: 2028 for new acquisitions, 2030 for full software, 2033 for hardware — staggered by upgrade cycle difficulty</li>
+        <li>SWIFT 2030 is significant: if global payment rails are PQC by 2030, financial institutions that haven't migrated face interoperability risk</li>
+        <li>The 2035 NIST hard deprecation of ECDSA/RSA is the single most important date for Bitcoin — after this, classical Bitcoin signatures are formally broken in the standards world</li>
+        <li>Bitcoin's soft-fork activation + migration window needs to close well before 2035 to avoid a forced, chaotic migration</li>
+      </ul>
+    </aside>
+  </section>
+
+  <section>
+    <h2>Exposed Public Keys</h2>
+    <ul style="text-align: left; margin-top: 0.8em;">
+      <span style="display: block; margin-bottom: 0.8em;">
+        The Elliptic Curve Discrete Logarithm Problem (ECDLP) underpins Bitcoin's
+        public-key security.  But it is vulnerable to:
+      </span>
+        <ul style="margin-top: 0.4em;">
+          <li>Quantum computers <span class="muted">(Shor's Algorithm)</span></li>
+          <li>Potentially classical computers <span class="muted">(ongoing cryptanalysis)</span></li>
+        </ul>
+    </ul>
+    <aside class="notes">
+      <ul>
+        <li>ECDLP: given public key Q = k·G, recovering private key k is
+            computationally infeasible — classically</li>
+        <li>Quantum threat: Shor's Algorithm solves ECDLP in polynomial time
+            on a CRQC; estimates ~10–15 years away, timelines highly uncertain</li>
+        <li>Classical threat: no known break today, but cryptanalysis is active;
+            unexpected breakthroughs (cf. RSA factoring improvements) cannot be ruled out</li>
+        <li>Key exposure problem: a Bitcoin address only reveals its public key at spend time
+          <ul>
+            <li>P2PKH (unspent, never broadcast) — protected by SHA-256 / RIPEMD-160 hash layer</li>
+            <li>Reused addresses and P2PK outputs — public key exposed directly in the UTXO set</li>
+          </ul>
+        </li>
+      </ul>
+    </aside>
+  </section>
+
+  <section>
+    <h2>Attack Vectors</h2>
+
+    <!-- ── Full-width combined timeline ─────────────────────────── -->
+    <!--
+      Zone widths intentionally represent attack window size:
+        MEMPOOL  (narrow, ~28%) = short-range window ≈ 10 min
+        TIMECHAIN (wide,  ~72%) = long-range window  = unlimited
+    -->
+    <svg viewBox="0 -26 1000 201" style="width: 100%; margin-top: 3.5em;
+         font-family: 'Segoe UI', system-ui, sans-serif;">
+
+      <!-- Attack type headings — above zone boxes -->
+      <text x="140" y="-10" text-anchor="middle" font-size="16"
+            fill="#ef4444" font-weight="bold">Short-Range Attack</text>
+      <text x="641" y="-10" text-anchor="middle" font-size="16"
+            fill="#c084fc" font-weight="bold">Long-Range Attack</text>
+
+      <!-- Background zones -->
+      <rect x="1"   y="1" width="278" height="173" rx="6"
+            fill="rgba(247,147,26,0.07)" stroke="rgba(247,147,26,0.3)" stroke-width="1"/>
+      <rect x="284" y="1" width="715" height="173" rx="6"
+            fill="rgba(124,58,237,0.07)" stroke="rgba(124,58,237,0.25)" stroke-width="1"/>
+
+      <!-- Zone labels -->
+      <text x="140" y="18" text-anchor="middle" font-size="12"
+            fill="#f7931a" font-weight="bold" letter-spacing="2">MEMPOOL</text>
+      <text x="641" y="18" text-anchor="middle" font-size="12"
+            fill="#7c3aed" font-weight="bold" letter-spacing="2">TIMECHAIN</text>
+
+      <!-- Timeline spine -->
+      <line x1="30" y1="65" x2="968" y2="65" stroke="#475569" stroke-width="2"/>
+      <polygon points="968,60 978,65 968,70" fill="#475569"/>
+
+      <!-- ── Event 1: TX Broadcast to mempool ── -->
+      <circle cx="70" cy="65" r="7" fill="#f7931a"/>
+      <text x="70" y="45" text-anchor="middle" font-size="11" fill="#f7931a" font-weight="bold">TX Broadcast</text>
+      <text x="70" y="57" text-anchor="middle" font-size="11" fill="#f7931a" font-weight="bold">to Mempool</text>
+      <text x="70" y="78" text-anchor="middle" font-size="9" fill="#64748b">pubkey in witness (P2WPKH)</text>
+
+      <!-- ── Event 2: Confirmed — zone boundary ── -->
+      <circle cx="285" cy="65" r="7" fill="#10b981"/>
+      <text x="285" y="45" text-anchor="middle" font-size="11" fill="#10b981" font-weight="bold">Confirmed</text>
+      <text x="285" y="57" text-anchor="middle" font-size="11" fill="#10b981" font-weight="bold">on Timechain</text>
+      <text x="285" y="78" text-anchor="middle" font-size="9"  fill="#64748b">pubkey permanent</text>
+
+      <!-- ── Event 3: Pubkey exposed long-term ── -->
+      <circle cx="650" cy="65" r="7" fill="#c084fc"/>
+      <text x="650" y="45" text-anchor="middle" font-size="11" fill="#c084fc" font-weight="bold">Pubkey on</text>
+      <text x="650" y="57" text-anchor="middle" font-size="11" fill="#c084fc" font-weight="bold">Timechain</text>
+      <text x="650" y="78" text-anchor="middle" font-size="9"  fill="#64748b">P2PK / reused addr</text>
+
+      <!-- ── Short-range bracket (narrow) ── -->
+      <line x1="70"  y1="100" x2="270" y2="100"
+            stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <line x1="70"  y1="94" x2="70"  y2="106" stroke="#ef4444" stroke-width="1.5"/>
+      <line x1="270" y1="94" x2="270" y2="106" stroke="#ef4444" stroke-width="1.5"/>
+      <text x="170" y="118" text-anchor="middle" font-size="10"
+            fill="#ef4444" font-weight="bold">Short-Range  ≈ 10 min</text>
+      <text x="170" y="132" text-anchor="middle" font-size="9" fill="#94a3b8">CRQC must beat block</text>
+
+      <!-- ── Long-range bracket (wide) ── -->
+      <line x1="300" y1="100" x2="960" y2="100"
+            stroke="#c084fc" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <line x1="300" y1="94" x2="300" y2="106" stroke="#c084fc" stroke-width="1.5"/>
+      <line x1="960" y1="94" x2="960" y2="106" stroke="#c084fc" stroke-width="1.5"/>
+      <text x="630" y="118" text-anchor="middle" font-size="10"
+            fill="#c084fc" font-weight="bold">Long-Range — unlimited time to solve ECDLP</text>
+      <text x="630" y="132" text-anchor="middle" font-size="9" fill="#94a3b8">pubkey permanently on timechain (P2PK, reused addresses, Taproot)</text>
+
+    </svg>
+
+    <aside class="notes">
+      <strong>Top address-reuse violators (long-range attack surface):</strong>
+      <ul>
+        <li><strong>Satoshi's early mining rewards</strong> — mined via P2PK; public key is in
+            the scriptPubKey of the UTXO, permanently visible without ever needing to spend.
+            Estimated ~1M BTC. Never moved.</li>
+        <li><strong>Mt. Gox cold wallets</strong> — well-catalogued on-chain; large P2PKH
+            balances with previously broadcast transactions exposing public keys.
+            ~140K BTC in trustee-held addresses.</li>
+        <li><strong>Exchanges (older infrastructure)</strong> — Binance, Coinbase, Kraken, and
+            others have historically consolidated to well-known hot wallet addresses that
+            have sent and received thousands of times, exposing public keys repeatedly.</li>
+        <li><strong>Donation / static addresses</strong> — arguably the most widespread category;
+            any website, GitHub profile, book, or YouTube description listing a single BTC
+            address indefinitely. Every spend from that address exposes the public key.</li>
+        <li><strong>Silk Road / seized government wallets</strong> — US DOJ, IRS-CI, and other
+            agencies hold seized Bitcoin at known addresses with exposed public keys.</li>
+        <li><strong>Early wallet users (pre-BIP32)</strong> — wallets before HD derivation
+            (pre-2013) didn't rotate addresses; many long-term holders have significant
+            balances at reused addresses from this era.</li>
+        <li><strong>Mining pool payout addresses</strong> — miners who used the same payout
+            address for years have fully exposed public keys with large accumulated balances.</li>
+      </ul>
+      <strong>Short-range note:</strong> P2WPKH is the primary concern here —
+      the pubkey is hidden behind a hash until spend time, but is exposed in the
+      witness data the moment the transaction hits the mempool.
+    </aside>
+
+  </section>
+
+  <section>
+    <h2>BIP-360</h2>
+    <div style="display: flex; align-items: center; justify-content: center; gap: 2em; margin-top: 1em;">
+      <img src="images/bip_360_cat.png"
+           alt="BIP-360 illustration"
+           style="max-height: 460px; width: auto; border-radius: 8px;
+                  box-shadow: 0 4px 24px rgba(0,0,0,0.5); margin-left: 20%;">
+      <div style="flex: 0 0 52%; text-align: left;">
+        <p style="font-size: 0.68em; font-style: italic; font-weight: bold;
+                  color: #e2e8f0; line-height: 1.6; margin-bottom: 0.5em;">
+          "A smooth and effective QR transition plan for Bitcoin could take several years
+          to execute — with more prep time inevitably leading to better security outcomes
+          for all."
+        </p>
+        <p style="font-size: 0.58em; font-style: normal; font-weight: normal;
+                  color: #94a3b8; margin: 0;">
+          — Hunter Beast, co-author of BIP-360
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>BIP-360: Pay-To-Merkle-Root</h2>
+    <div style="display:flex; align-items:center; justify-content:center; gap:0.3em; width:100%; height:85vh; margin:0 0 1em 0; padding:0;">
+      <div style="flex:1; min-width:0; display:flex; flex-direction:column; align-items:center;">
+        <strong style="font-size:0.8em; margin-bottom:0.3em;">P2TR</strong>
+        <div style="position:relative; width:80%; height:80%;">
+          <img src="images/p2tr_construction.png" style="width:100%; height:100%; object-fit:contain;" />
+          <svg class="fragment" data-fragment-index="1" style="position:absolute; top:0; left:0; width:100%; height:100%;" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <line x1="5" y1="40" x2="45" y2="90" stroke="red" stroke-width="2" vector-effect="non-scaling-stroke" />
+          </svg>
+        </div>
+      </div>
+      <span class="fragment" data-fragment-index="2" style="font-size:3em; font-weight:bold; flex-shrink:0;">&#8594;</span>
+      <div class="fragment" data-fragment-index="2" style="flex:1; min-width:0; display:flex; flex-direction:column; align-items:center;">
+        <strong style="font-size:0.8em; margin-bottom:0.3em;">P2MR</strong>
+        <div style="position:relative; width:75%; height:75%;">
+          <img src="images/p2mr_merkletree.png" style="width:100%; height:100%; object-fit:contain;" />
+          <svg class="fragment" data-fragment-index="3"
+               style="position:absolute; top:0; left:0; width:100%; height:100%; overflow:visible;"
+               viewBox="0 0 100 100">
+            <defs>
+              <marker id="blue-arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" fill="blue" />
+              </marker>
+              <marker id="green-arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" fill="green" />
+              </marker>
+            </defs>
+            <line x1="80" y1="100" x2="77" y2="62" stroke="green" stroke-width="2"
+                  marker-end="url(#green-arrow)" vector-effect="non-scaling-stroke" />
+            <text x="80" y="110" text-anchor="middle" fill="green" font-size="7" font-family="monospace">&lt;Schnorr pub_key&gt; OP_CHECKSIG</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>P2MR Script Path Spend  witness</h2>
+    <div style="position:relative; display:flex; flex-direction:column; align-items:center; gap:0.7em;">
+      <div style="position:relative; display:inline-block;">
+        <img src="images/p2tr_witness.svg" style="max-height:57vh; max-width:90vw; display:block;" />
+        <svg class="fragment" data-fragment-index="1"
+             style="position:absolute; top:0; left:0; width:100%; height:100%;"
+             viewBox="0 0 209.567 49" preserveAspectRatio="xMidYMid meet">
+          <line x1="88" y1="16" x2="93" y2="34" stroke="red" stroke-width="2" vector-effect="non-scaling-stroke" />
+        </svg>
+      </div>
+      <div class="fragment" data-fragment-index="1" style="display:flex; flex-direction:column; align-items:center; gap:0.2em; margin-right:3vw;">
+        <span style="font-size:2.5em; font-weight:bold;">&#8595;</span>
+        <img src="images/p2mr_witness.svg" style="max-height:18vh; max-width:90vw;" />
+      </div>
+    </div>
+    <aside class="notes">
+      <ul>
+        <li><strong>BIP-360 doesn't have anything to do with PQC.  That's by design.</strong></li>
+        <li><strong>Purpose is to eliminate PQC vulnerability from P2TR and allow for future PQC extensions</strong></li>
+      </ul>
+    </aside>
+  </section>
+
+  <section>
+    <h2>BIP-360 Status</h2>
+    <p style="font-size:0.65em; color:#4ade80; margin:0.3em 0 0.8em 0;">
+      ✅ BIP-360 has been merged into the official Bitcoin BIP repository
+    </p>
+
+    <!-- Timeline: 10 milestones, spacing 120px, x: 60,180,300,420,540,660,780,900,1020,1140 -->
+    <div style="width:100%; padding: 0; box-sizing:border-box; overflow:visible; margin-top:10%;">
+      <svg viewBox="0 0 1260 280" xmlns="http://www.w3.org/2000/svg"
+           style="width:100%; height:auto; display:block; overflow:visible;">
+
+        <!-- Track line -->
+        <line x1="40" y1="30" x2="1200" y2="30" stroke="#475569" stroke-width="3"/>
+        <!-- Progress line: milestones 1-3 complete (x=60 to x=300) -->
+        <line x1="40" y1="30" x2="300" y2="30" stroke="#f7931a" stroke-width="4"/>
+        <!-- Arrow head -->
+        <polygon points="1200,24 1215,30 1200,36" fill="#475569"/>
+
+        <!-- Done dots (1,2) -->
+        <circle cx="60"  cy="30" r="9" fill="#f7931a" stroke="#fff" stroke-width="2"/>
+        <circle cx="180" cy="30" r="9" fill="#f7931a" stroke="#fff" stroke-width="2"/>
+        <!-- Current: milestone 3 — green star -->
+        <circle cx="300" cy="30" r="12" fill="#4ade80" stroke="#fff" stroke-width="2"/>
+        <text x="300" y="35" text-anchor="middle" font-size="13" fill="#000" font-weight="bold">★</text>
+        <!-- Future dots (4–10) -->
+        <circle cx="420"  cy="30" r="9" fill="#334155" stroke="#64748b" stroke-width="2"/>
+        <circle cx="540"  cy="30" r="9" fill="#334155" stroke="#64748b" stroke-width="2"/>
+        <circle cx="660"  cy="30" r="9" fill="#334155" stroke="#64748b" stroke-width="2"/>
+        <circle cx="780"  cy="30" r="9" fill="#334155" stroke="#64748b" stroke-width="2"/>
+        <circle cx="900"  cy="30" r="9" fill="#334155" stroke="#64748b" stroke-width="2"/>
+        <circle cx="1020" cy="30" r="9" fill="#334155" stroke="#64748b" stroke-width="2"/>
+        <circle cx="1140" cy="30" r="9" fill="#334155" stroke="#64748b" stroke-width="2"/>
+
+        <!-- Tick lines -->
+        <line x1="60"   y1="39" x2="60"   y2="62" stroke="#64748b" stroke-width="1.5"/>
+        <line x1="180"  y1="39" x2="180"  y2="62" stroke="#64748b" stroke-width="1.5"/>
+        <line x1="300"  y1="42" x2="300"  y2="62" stroke="#4ade80" stroke-width="1.5"/>
+        <line x1="420"  y1="39" x2="420"  y2="62" stroke="#475569" stroke-width="1.5"/>
+        <line x1="540"  y1="39" x2="540"  y2="62" stroke="#475569" stroke-width="1.5"/>
+        <line x1="660"  y1="39" x2="660"  y2="62" stroke="#475569" stroke-width="1.5"/>
+        <line x1="780"  y1="39" x2="780"  y2="62" stroke="#475569" stroke-width="1.5"/>
+        <line x1="900"  y1="39" x2="900"  y2="62" stroke="#475569" stroke-width="1.5"/>
+        <line x1="1020" y1="39" x2="1020" y2="62" stroke="#475569" stroke-width="1.5"/>
+        <line x1="1140" y1="39" x2="1140" y2="62" stroke="#475569" stroke-width="1.5"/>
+
+        <!-- Angled labels (+35deg clockwise, starting below tick) -->
+        <text transform="rotate(35,60,62)"   x="60"   y="62" font-size="13" fill="#f7931a" font-family="sans-serif">Mailing List Proposal</text>
+        <text transform="rotate(35,180,62)"  x="180"  y="62" font-size="13" fill="#f7931a" font-family="sans-serif">BIP Number Assigned</text>
+        <text transform="rotate(35,300,62)"  x="300"  y="62" font-size="13" fill="#4ade80" font-weight="bold" font-family="sans-serif">Merged — BIP Repo ← now</text>
+        <text transform="rotate(35,420,62)"  x="420"  y="62" font-size="13" fill="#94a3b8" font-family="sans-serif">Community Review</text>
+        <text transform="rotate(35,540,62)"  x="540"  y="62" font-size="13" fill="#94a3b8" font-family="sans-serif">Ref Implementation (Core PR)</text>
+        <text transform="rotate(35,660,62)"  x="660"  y="62" font-size="13" fill="#94a3b8" font-family="sans-serif">Core PR Merged</text>
+        <text transform="rotate(35,780,62)"  x="780"  y="62" font-size="13" fill="#94a3b8" font-family="sans-serif">Core Release (e.g. v29.0)</text>
+        <text transform="rotate(35,900,62)"  x="900"  y="62" font-size="13" fill="#94a3b8" font-family="sans-serif">Activation Signaling (BIP8/BIP9)</text>
+        <text transform="rotate(35,1020,62)" x="1020" y="62" font-size="13" fill="#94a3b8" font-family="sans-serif">LOCKED_IN</text>
+        <text transform="rotate(35,1140,62)" x="1140" y="62" font-size="13" fill="#94a3b8" font-family="sans-serif">ACTIVE / Economic Adoption</text>
+      </svg>
+    </div>
+
+    <aside class="notes">
+      <strong>Activation Signaling: BIP9 vs BIP8</strong>
+      <ul>
+        <li><strong>BIP9</strong> — miners signal readiness by setting bits in the block version field during a fixed 2016-block retarget period (~2 weeks)
+          <ul>
+            <li>Requires 95% of blocks to signal within a single period to reach LOCKED_IN</li>
+            <li>If threshold is not met before the timeout height, the deployment <em>fails</em> — process must restart</li>
+            <li>Gives miners effective veto power; controversial after SegWit activation standoff (2016–2017)</li>
+          </ul>
+        </li>
+        <li><strong>BIP8</strong> — similar version-bit signaling, but adds a <code>lockinontimeout</code> (LOT) parameter
+          <ul>
+            <li>LOT=false: behaves like BIP9 — times out if threshold not met</li>
+            <li>LOT=true: forces LOCKED_IN at the end of the timeout period regardless of miner signaling</li>
+            <li>LOT=true is contentious — effectively removes miner veto but risks chain split if miners resist</li>
+          </ul>
+        </li>
+        <li><strong>Speedy Trial</strong> (used for Taproot, 2021) — a short BIP9 window (~3 months) with a lower 90% threshold; gave miners a fast on-ramp with a clear expiry</li>
+        <li><strong>State machine</strong>: DEFINED → STARTED → LOCKED_IN → ACTIVE (one grace period after LOCKED_IN for node operators to upgrade)</li>
+        <li><strong>For BIP-360</strong>: activation mechanism has not yet been chosen; choice of BIP8/BIP9/Speedy Trial will itself be a major community debate given the political difficulty of consensus changes post-Taproot</li>
+        <li><strong>Economic nodes matter too</strong>: even after ACTIVE, adoption requires exchanges, wallets, and major services to enforce the new rules — miner activation alone does not guarantee economic consensus</li>
+      </ul>
+    </aside>
+  </section>
+
+  <section>
+    <h2>P2MR Future Add-On: SLH-DSA</h2>
+    <div style="display:flex; flex-direction:column; align-items:center; margin-top:20%;">
+      <div style="position:relative; display:inline-block;">
+        <img src="images/p2mr_merkletree.png" style="max-height:55vh; max-width:90vw; display:block;" />
+        <svg class="fragment" data-fragment-index="1"
+             style="position:absolute; top:0; left:0; width:100%; height:100%; overflow:visible;"
+             viewBox="0 0 100 100">
+          <defs>
+            <marker id="green-arrow-up" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+              <polygon points="0 0, 10 3.5, 0 7" fill="green" />
+            </marker>
+            <marker id="green-arrow-down2" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+              <polygon points="0 0, 10 3.5, 0 7" fill="green" />
+            </marker>
+          </defs>
+          <line x1="80" y1="100" x2="77" y2="62" stroke="green" stroke-width="2"
+                marker-end="url(#green-arrow-up)" vector-effect="non-scaling-stroke" />
+          <text x="80" y="110" text-anchor="middle" fill="green" font-size="7" font-family="monospace">&lt;Schnorr pub_key&gt; OP_CHECKSIG</text>
+        </svg>
+        <svg class="fragment" data-fragment-index="2"
+             style="position:absolute; top:0; left:0; width:100%; height:100%; overflow:visible;"
+             viewBox="0 0 100 100">
+          <defs>
+            <marker id="green-arrow-down3" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+              <polygon points="0 0, 10 3.5, 0 7" fill="green" />
+            </marker>
+          </defs>
+          <line x1="60" y1="-10" x2="55" y2="25" stroke="green" stroke-width="2"
+                marker-end="url(#green-arrow-down3)" vector-effect="non-scaling-stroke" />
+          <text x="60" y="-15" text-anchor="middle" fill="green" font-size="7" font-family="monospace">&lt;SLH-DSA pub_key&gt; OP_SUBSTR</text>
+        </svg>
+      </div>
+    </div>
+    <aside class="notes">
+      SLH-DSA is a hash based PQC scheme;  which is ideal because Bitcoin already relies on the efficacy of hash functions.
+      BIP-360 Add-Ons leverage OP_SUCCESS127 — a previously undefined opcode that always succeeds in tapscript,
+      enabling new post-quantum script semantics (e.g. OP_SUBSTR for key extraction) without a hard fork.
+    </aside>
+  </section>
+
+  <section>
+    <h2>SLH-DSA: Trade-offs</h2>
+    <div style="position:relative; width:90%; margin:15vh auto 0;">
+    <table style="border-collapse:collapse; width:100%; font-size:0.85em;">
+      <thead>
+        <tr>
+          <th style="border:1px solid #ccc; padding:0.4em 0.8em; text-align:left;"><strong>Scheme</strong></th>
+          <th style="border:1px solid #ccc; padding:0.4em 0.8em; text-align:right;"><strong>Public Key Size</strong></th>
+          <th style="border:1px solid #ccc; padding:0.4em 0.8em; text-align:right;"><strong>Signature Size</strong></th>
+          <th style="border:1px solid #ccc; padding:0.4em 0.8em; text-align:right;"><strong>Verification Cycles</strong></th>
+        </tr>
+      </thead>
+      <tbody style="font-size:0.8em;">
+        <tr>
+          <td style="border:1px solid #ccc; padding:0.4em 0.8em;">Schnorr (secp256k1)</td>
+          <td style="border:1px solid #ccc; padding:0.4em 0.8em; text-align:right;">32 bytes</td>
+          <td style="border:1px solid #ccc; padding:0.4em 0.8em; text-align:right;">64 bytes</td>
+          <td style="border:1px solid #ccc; padding:0.4em 0.8em; text-align:right;">~50K</td>
+        </tr>
+        <tr>
+          <td style="border:1px solid #ccc; padding:0.4em 0.8em;">SLH-DSA-SHAKE-128s</td>
+          <td style="border:1px solid #ccc; padding:0.4em 0.8em; text-align:right;">32 bytes</td>
+          <td style="border:1px solid #ccc; padding:0.4em 0.8em; text-align:right;">7,856 bytes</td>
+          <td style="border:1px solid #ccc; padding:0.4em 0.8em; text-align:right;">~31M</td>
+        </tr>
+      </tbody>
+    </table>
+    <svg class="fragment" data-fragment-index="1"
+         style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; overflow:visible;">
+      <!-- oval around "7,856 bytes" — row 2, col 3 -->
+      <ellipse cx="62%" cy="78%" rx="8%" ry="12%" fill="none" stroke="red" stroke-width="2" />
+      <!-- oval around "~31M" — row 2, col 4 -->
+      <ellipse cx="95%" cy="78%" rx="6%" ry="12%" fill="none" stroke="red" stroke-width="2" />
+    </svg>
+    </div>
+    <aside class="notes">
+      These NIST standards are architected for PKI use cases.  Not Bitcoin.  Much work can and needs to be done to architect and implement a PQC signature scheme optimized for Bitcoin.
+      Block weight implications — a single SLH-DSA input would consume ~31× the witness bytes of a Taproot input, making fees prohibitive at current block sizes.
+      Bitcoin has a 520-byte stack element limit — a 7,856-byte SLH-DSA signature can't even be pushed onto the script stack without a consensus change.
+    </aside>
+  </section>
+
+  <section>
+    <h2>SLH-DSA: Additional Trade-offs</h2>
+    <ul style="width:95%; margin:auto; margin-top:20vh; list-style:disc; padding-left:1.5em;">
+      <li>No key aggregation (MuSig2-equivalent) exists for SLH-DSA, so multisig costs scale linearly</li>
+      <li>No extended xpubs for watch-only wallets</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>PQC:  Other potential schemes</h2>
+    <ul style="width:95%; margin:auto; margin-top:20vh; list-style:disc; padding-left:1.5em; font-size:0.7em;">
+      <li>ML-DSA (FIPS 204) : lattice-based — standardizes CRYSTALS-Dilithium</li>
+      <li>FN-DSA (FIPS 206) : lattice-based — standardizes Falcon; ~666 byte signatures</li>
+      <li>SQISign : isogeny-based — SIDH/SIKE predecessor was broken in 2022</li>
+      <li>SHRINCS (Blockstream)</li>
+      <li>.... FancySig</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>TestnetQ</h2>
+    <ul>
+      <li>Uses prototype Bitcoin Core client (v29) that implements BIP-360 (P2MR)</li>
+      <li>Also allows for SLH-DSA based locking scripts</li>
+      <li>Use Mara's Anduro wallet:  <a href="https://bit.ly/4rDyet7">https://bit.ly/4rDyet7</a></li>
+      <li>Will be available ~ May 2026</li>
+    </ul>
+  </section>
+
+
+  <section>
+    <h2>Hourglass v2</h2>
+    <div style="position:relative; display:inline-block;">
+    <img src="images/btc_supply_vs_crqc.png"
+           alt="Pie chart: Bitcoin supply breakdown by quantum vulnerability"
+           style="max-height: 500px; width: auto; display: block;
+                  border-radius: 8px; box-shadow: 0 4px 24px rgba(0,0,0,0.5);">
+    <svg style="position:absolute; top:0; left:0; width:100%; height:100%; overflow:visible;"
+         viewBox="0 0 908 914">
+      <defs>
+        <marker id="arrow-red-hv2" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L9,3 Z" fill="#ef4444"/>
+        </marker>
+      </defs>
+      <g>
+
+          <!--
+            Arrow: originates outside the image to the right (x=1080)
+            and points to the P2PK legend row (4th legend item, y≈255).
+          -->
+          <line x1="1080" y1="272"
+                x2="810"  y2="258"
+                stroke="#ef4444" stroke-width="3"
+                marker-end="url(#arrow-red-hv2)"/>
+
+          <!-- Label pill background -->
+          <rect x="1087" y="249" width="152" height="34"
+                rx="6" ry="6"
+                fill="rgba(0,0,0,0.72)" stroke="#ef4444" stroke-width="1.5"/>
+
+          <!-- Label text -->
+          <text x="1163" y="272"
+                fill="#ef4444" font-size="20" font-weight="bold"
+                font-family="'Segoe UI', system-ui, sans-serif"
+                text-anchor="middle">Hourglass v2</text>
+
+      </g>
+    </svg>
+    </div>
+    <aside class="notes">
+        <ul>
+          <li>
+            Without a spending constraint, over 6,000 P2PK transactions could be executed in each block — potentially releasing more than 300,000 coins per block to the market.
+            At this rate, all P2PK coins could be spent in just a few hours if no mitigations are activated. 
+          </li>
+
+          <li>
+            Push back:  Key (mis)management is an application layer concern, not a consensus layer concern.
+            Where is the proposal for freezing or rate-limiting spending of coins held on exchanges (violating address reuse)?
+            https://groups.google.com/g/bitcoindev/c/0E1UyyQIUA0
+          </li>
+        <ul>
+    </aside>
+  </section>
+
+  <section>
+    <h2>Hourglass v2</h2>
+    <ul style="width:95%; margin:auto; margin-top:20vh; list-style:disc; padding-left:1.5em;">
+      <li>One P2PK bitcoin per block</li>
+      <li>Goals:
+        <ul style="list-style:circle; padding-left:1.5em;">
+          <li>reduce incentives to attack the network</li>
+          <li>increase stability / robustness of network</li>
+        </ul>
+      </li>
+      <li>> 32 years to move all P2PK (upon activation)</li>
+      <li><a href="https://bit.ly/4dvVSUI" target="_blank" rel="noopener">bit.ly/4dvVSUI</a></li>
+    </ul>
+  </section>
+
+  <!--section>
+    <h2>References</h2>
+  </section-->
+
+  <section>
+    <h2>Appendix</h2>
+  </section>
+
+  <section>
+    <h2>PQC: SLH-DSA</h2>
+    <div style="display:flex; justify-content:center; align-items:center; height:70vh;">
+      <img src="images/SPHINCS_tree.png">
+    </div>
+  </section>
+
+  <section>
+    <h2>PQC: SHRINCS</h2>
+    <div style="display:flex; justify-content:center; align-items:center; height:70vh;">
+      <img src="images/SHRINCS_architecture.png">
+    </div>
+  </section>
+
+  <section>
+    <h2>PQC: ML-DSA / Dilithium</h2>
+  </section>
+
+  <section>
+    <h2>PQC: Isogenies</h2>
+  </section>
+
+  <section>
+    <h2>Shor's Algorithm</h2>
+  </section>
+
+  <section>
+    <h2>Grover's Algorithm</h2>
+  </section>
+
+</div><!-- /.slides -->
+</div><!-- /.reveal -->
+
+<!-- Reveal.js (local) -->
+<script src="node_modules/reveal.js/dist/reveal.js"></script>
+<script src="node_modules/reveal.js/dist/plugin/notes.js"></script>
+<script>
+  Reveal.initialize({
+    hash:                  true,   // slide positions in URL
+    slideNumber:           'c/t',  // current / total
+    transition:            'slide',
+    transitionSpeed:       'default',
+    backgroundTransition:  'fade',
+    controls:              true,
+    progress:              true,
+    center:                true,
+    width:                 1200,
+    height:                700,
+    margin:                0.02,
+    // Keyboard shortcuts: f = fullscreen, s = speaker notes, ? = help
+    plugins: [ RevealNotes ],
+  });
+</script>
+</body>
+</html>
