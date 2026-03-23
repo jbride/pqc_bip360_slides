@@ -200,6 +200,7 @@
         <ul style="margin-top: 0.4em;">
           <li>Quantum computers <span class="muted">(Shor's Algorithm)</span></li>
           <li>Potentially classical computers <span class="muted">(ongoing cryptanalysis)</span></li>
+          <li>Seed entropy size doesn't matter against Shor's or classical ECDLP breaks</li>
         </ul>
     </ul>
     <aside class="notes">
@@ -207,9 +208,35 @@
         <li>ECDLP: given public key Q = k·G, recovering private key k is
             computationally infeasible — classically</li>
         <li>Quantum threat: Shor's Algorithm solves ECDLP in polynomial time
-            on a CRQC; estimates ~10–15 years away, timelines highly uncertain</li>
+            on a CRQC; estimates ~10–15 years away, timelines highly uncertain
+          <ul>
+            <li>Seed entropy size is irrelevant against Shor's: the algorithm attacks the algebraic
+                structure of the elliptic curve group — given public key Q = k·G, it recovers k in
+                polynomial time regardless of how k was derived or how much entropy the seed had</li>
+            <li>A 128-bit seed and a 512-bit seed both produce a private key on secp256k1;
+                Shor's breaks either with the same polynomial-time complexity — the curve structure
+                is the vulnerability, not the randomness of key generation</li>
+            <li>Contrast with Grover's (brute-force): there, seed entropy does matter —
+                256-bit seed retains ~128-bit post-quantum security; 128-bit seed drops to ~64-bit
+                (broken). But Grover's is a secondary concern compared to Shor's for ECDSA/Schnorr</li>
+            <li>Implication: no amount of HD wallet re-seeding or entropy increase protects against
+                a CRQC — the signature scheme itself must be replaced (e.g. SLH-DSA, ML-DSA)</li>
+          </ul>
+        </li>
         <li>Classical threat: no known break today, but cryptanalysis is active;
-            unexpected breakthroughs (cf. RSA factoring improvements) cannot be ruled out</li>
+            unexpected breakthroughs (cf. RSA factoring improvements) cannot be ruled out
+          <ul>
+            <li>Seed entropy is equally irrelevant against classical ECDLP attacks: algorithms like
+                Pollard's rho and baby-step giant-step operate on the public key Q directly,
+                solving Q = k·G in O(√n) time (~2^128 operations for secp256k1) — the derivation
+                path or seed size has no bearing on this complexity</li>
+            <li>A classical breakthrough would exploit a structural weakness in the curve or group
+                arithmetic itself; a larger seed would not slow it down any more than it slows Shor's</li>
+            <li>Classical brute-force of the seed (exhaustive search) is the one case where entropy
+                matters — but at 256 bits this is classically infeasible (2^256 operations);
+                this is a different attack vector than cryptanalysis of the ECDLP</li>
+          </ul>
+        </li>
         <li>Key exposure problem: a Bitcoin address only reveals its public key at spend time
           <ul>
             <li>P2PKH (unspent, never broadcast) — protected by SHA-256 / RIPEMD-160 hash layer</li>
