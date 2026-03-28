@@ -1,6 +1,5 @@
 # BIP360 Introduction and Update
 
-
 ## Rendering
 
 ### Option 1 — Node.js dev server
