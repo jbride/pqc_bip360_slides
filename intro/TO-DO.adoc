@@ -1,0 +1,38 @@
+
+== CRQC evolution
+
+"Thus, a successful public demonstration of Shor’s algorithm on a 32-bit elliptic curve should not be seen as a wake-up call to adopt PQC as much as a potential signal that PQC adoption has already failed."
+    - pg 11
+
+The logic is a warning about false reassurance from early milestones.
+
+The concern is this: people might assume the threat timeline looks like:
+
+-----
+32-bit demo → 64-bit demo → 128-bit demo → 256-bit demo → now migrate
+-----
+
+...meaning a public 32-bit demonstration gives you years of warning before the real threat arrives.
+
+The paper argues this assumption is wrong for two reasons:
+
+. Progress is not gradual — it's threshold-based
++
+Quantum computing advances in discontinuous jumps when engineering barriers are overcome (error correction thresholds, coherent interconnects, etc.).
+Once a team solves the fundamental scaling problems to reach 32-bit ECDLP, there may be very little standing between them and 256-bit.
+The intermediate milestones (64, 128-bit) may fall quickly in succession, or be skipped entirely by teams with more resources.
+
+. The dangerous actor won't announce themselves
++
+A nation-state or well-funded adversary building a CRQC has every incentive to not publish a 32-bit demonstration.
+They would work in secret and go straight for 256-bit.
+So the only actors who would publicly demonstrate 32-bit capability are researchers or less sophisticated actors — who are precisely the ones who aren't the primary threat.
+
+Putting it together::
+
+If you see a public 32-bit demo, one of two things is true:
+
+* Migration is underway and will complete in time — good
+* Migration hasn't seriously started yet — in which case the 32-bit demo signals that the window to migrate has likely already closed, because the serious actors are already further along privately.
+
+The demo isn't the starting gun. It may be the finish line.

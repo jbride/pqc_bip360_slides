@@ -12,6 +12,7 @@ npm start            # serves on http://localhost:8000
 ### Option 2 — Python static server (no npm required)
 
 ```bash
+npm install
 python3 -m http.server 8000
 # open http://localhost:8000 in a browser
 ```
